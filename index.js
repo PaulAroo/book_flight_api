@@ -15,9 +15,16 @@ app.use("/", routes);
 
 const port = process.env.PORT || 3000;
 
+/* accepts body data (for post and update routes) with fields: 
+id: number,
+title: string,
+time: string,
+price: number,
+date: string
+*/
 app.post('/book-flight', (req, res) => {
   if (Object.keys(req.body).length === 0)
-    return res.status(400).json({message: "empty request body"})
+    return res.status(400).json({error: "empty request body"})
   else {
     flightData.push({...req.body})
     const stringedData = JSON.stringify(flightData, null, 2)
@@ -46,6 +53,9 @@ app.get('/single-flight/:id', (req, res) => {
 
 app.put('/update-flight', (req, res) => {
   const payload = {...req.body}
+  if (Object.keys(payload).length === 0)
+    return res.status(400).json({error: "empty request body"})
+
   const flightDataIndex = flightData.findIndex(flight =>
     flight.id === payload.id
   )
